@@ -1,0 +1,53 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+*.whl
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+.venv/
+venv/
+env/
+.env/
+ENV/
+
+# ── Jupyter Notebook ───────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb_checkpoints
+
+# ── Scratch / helper scripts (not part of the submission) ─────────────────────
+append_nb.py
+append_task2.py
+extract.py
+extract2.py
+notebook_extract.txt
+notebook_extract_task12.txt
+
+# ── Test data (will be released separately – do not commit) ───────────────────
+test_data.csv
+submission.csv
+
+# ── OS / editor artefacts ──────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# ── Byte-compiled / optimised files ───────────────────────────────────────────
+*.pyc
+*.pyo
+
+
+/Lecture_Slides
+/River_WaterLevel_Task1&2_Full_Analysis.ipynb
+/235514B-River_WaterLevel_Preliminary_Analysis.html
+/Assignment1.pdf
