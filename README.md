@@ -1,4 +1,4 @@
-# River Water Level Forecasting – CM2420 Statistical Inference
+# River Water Level Forecasting
 
 **Name:** Ekanayake D.B  
 **Index No:** 235514B  
@@ -8,7 +8,7 @@
 
 ## Overview
 
-This repository contains a complete regression analysis for the **River Water Level Forecasting Challenge** hosted as part of CM2420. The goal is to develop a statistical model that predicts river water levels **12 hours ahead** using current water level and 24-hour rainfall observations collected from gauging stations across Sri Lanka.
+This repository contains a complete regression analysis for the **River Water Level Forecasting Challenge** hosted as part of CM2420 course module. The goal is to develop a statistical model that predicts river water levels **12 hours ahead** using current water level and 24 hour rainfall observations collected from gauging stations across Sri Lanka.
 
 The dataset is derived from river monitoring data published by the Department of Irrigation, Sri Lanka, via the Disaster Management Centre (DMC), representing observations from major river basins during June 2026.
 
@@ -46,7 +46,7 @@ River_WaterLevel_Preliminary_Analysis/
 
 ### Task 1 – Model Development
 
-The full analysis notebook (`River_WaterLevel_Task1&2_Full_Analysis.ipynb`) covers:
+The full analysis notebook (`River_WaterLevel_Task1_Analysis.ipynb`) covers:
 
 1. **Exploratory Data Analysis** – distributions, missing values, outlier inspection, correlation analysis
 2. **Data Preprocessing** – remove rows with missing target, impute 2 missing rainfall values with the training median (15.65 mm)
