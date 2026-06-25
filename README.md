@@ -19,23 +19,13 @@ The dataset is derived from river monitoring data published by the Department of
 ```
 River_WaterLevel_Preliminary_Analysis/
 │
-├── River_WaterLevel_Task1&2_Full_Analysis.ipynb  ← Main analysis notebook (Tasks 1 & 2)
-├── 235514B_River_WaterLevel_Preliminary_Analysis.ipynb  ← Preliminary EDA notebook
-├── 235514B-River_WaterLevel_Preliminary_Analysis.html   ← Exported HTML of preliminary notebook
-│
+├── River_WaterLevel_Task1_Analysis.ipynb  ← Preliminary EDA notebook
+├── requirements.txt
 ├── training_data.csv          ← Training dataset (78 gauging stations)
-├── Assignment1.pdf            ← Original assignment specification
-│
-├── Lecture Slides/            ← CM2420 lecture materials (reference)
-│   ├── Regression Analysis.pdf
-│   ├── Multiple Linear Regression Analysis.pdf
-│   └── ...
-│
+├── README.md
+|
 └── .gitignore
 ```
-
-> **Note:** `test_data.csv` and `submission.csv` are excluded from version control (see `.gitignore`).  
-> The test dataset will be released separately by the course instructor.
 
 ---
 
@@ -80,14 +70,7 @@ $$\widehat{\text{Water Level}_{t+12h}} = -0.0467 + 0.9344 \times \text{Water Lev
 
 ### Task 2 – Generating Predictions
 
-When `test_data.csv` is available, run the **Task 2** section of the main notebook to:
-1. Load and inspect the test file
-2. Apply identical preprocessing (impute missing rainfall with training median)
-3. Generate predictions using the final univariate OLS model
-4. Run automated sanity checks
-5. Save `submission.csv` in the required format
-
-**Required submission format:**
+**format:**
 ```
 ID,Water_Level_Xt
 1,1.234
@@ -141,7 +124,7 @@ Open `River_WaterLevel_Task1&2_Full_Analysis.ipynb` in Jupyter and run:
 
 ## Evaluation Metric
 
-Submissions are scored on **Mean Squared Error (MSE)**:
+Scored on **Mean Squared Error (MSE)**:
 
 $$\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2$$
 
