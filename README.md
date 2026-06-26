@@ -19,7 +19,7 @@ The dataset is derived from river monitoring data published by the Department of
 ```
 River_WaterLevel_Preliminary_Analysis/
 │
-├── River_WaterLevel_Task1_Analysis.ipynb  ← Preliminary EDA notebook
+├── River_WaterLevel_Analysis.ipynb        ← Full analysis notebook (Task 1 & 2)
 ├── requirements.txt
 ├── training_data.csv          ← Training dataset (78 gauging stations)
 ├── README.md
@@ -38,7 +38,7 @@ River_WaterLevel_Preliminary_Analysis/
 | `24HrRF_Xt_1` | Total rainfall (mm) in previous 24 hours at time *t* | Predictor X₂ |
 | `Water_Level_Xt` | River water level (mm) at time *t* + 12 hours | **Target Y** |
 
-**Training set:** 78 rows, 6 rows excluded (missing target) → **72 usable training observations**
+**Training set:** 78 rows, 8 rows excluded (listwise deletion) → **70 usable training observations**
 
 ---
 
@@ -49,7 +49,7 @@ River_WaterLevel_Preliminary_Analysis/
 The full analysis notebook (`River_WaterLevel_Task1_Analysis.ipynb`) covers:
 
 1. **Exploratory Data Analysis** – distributions, missing values, outlier inspection, correlation analysis
-2. **Data Preprocessing** – remove rows with missing target, impute 2 missing rainfall values with the training median (15.65 mm)
+2. **Data Preprocessing** – listwise deletion of all rows with any missing value (6 missing target + 2 missing rainfall = 8 rows removed)
 3. **Univariate OLS Regression** – current water level as the sole predictor
 4. **Multivariate OLS Regression** – current water level + 24-hour rainfall
 5. **Model Diagnostics** – residuals vs fitted, Q-Q plot, Shapiro-Wilk test, Durbin-Watson, VIF
@@ -58,15 +58,15 @@ The full analysis notebook (`River_WaterLevel_Task1_Analysis.ipynb`) covers:
 
 ### Final Model
 
-$$\widehat{\text{Water Level}_{t+12h}} = -0.0467 + 0.9344 \times \text{Water Level}_{t}$$
+$$\widehat{\text{Water Level}_{t+12h}} = -0.0305 + 0.9358 \times \text{Water Level}_{t}$$
 
 | Metric | Value |
 |---|---|
-| R-squared | 0.980 |
-| Adjusted R² | 0.980 |
-| RMSE | 0.335 mm |
-| MAE | 0.224 mm |
-| MSE | 0.112 mm² |
+| R-squared | 0.9834 |
+| Adjusted R² | 0.9831 |
+| RMSE | 0.3082 mm |
+| MAE | 0.2074 mm |
+| MSE | 0.0950 mm² |
 
 ### Task 2 – Generating Predictions
 
@@ -85,8 +85,7 @@ ID,Water_Level_Xt
 - The **current water level explains 98% of the variance** in the level 12 hours ahead (correlation ≈ 0.99). This reflects the physical persistence of river flow over short time horizons.
 - **24-hour rainfall is not a statistically significant predictor** (p = 0.187) once the current level is included. Its effect is already embedded in the current water level.
 - **VIF ≈ 1.13** confirms no multicollinearity between the two predictors.
-- The residuals exhibit **mild heteroscedasticity** and **non-normality** (Shapiro-Wilk p < 0.001), consistent with the right-skewed nature of hydrological data. These are acknowledged limitations.
-- The DW statistic (1.29) indicates some spatial autocorrelation between residuals of geographically nearby stations, which is expected in cross-sectional river data.
+- The residuals exhibit **mild heteroscedasticity** and **non-normality**, consistent with the right-skewed nature of hydrological data. These are acknowledged limitations.
 
 ---
 
@@ -111,7 +110,7 @@ Or activate the project virtual environment:
 
 ### Run the notebook
 
-Open `River_WaterLevel_Task1&2_Full_Analysis.ipynb` in Jupyter and run:
+Open `River_WaterLevel_Analysis.ipynb` in Jupyter and run:
 - **Kernel → Restart & Run All** to execute everything cleanly from scratch.
 
 ### Generate the submission (Task 2)
@@ -129,7 +128,7 @@ Scored on **Mean Squared Error (MSE)**:
 $$\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2$$
 
 Lower MSE = better performance.  
-Training MSE of the final model: **0.112 mm²**
+Training MSE of the final model: **0.0950 mm²**
 
 ---
 
