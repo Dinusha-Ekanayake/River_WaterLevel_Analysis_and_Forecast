@@ -73,11 +73,16 @@ $$\widehat{\text{Water Level}_{t+12h}} = -0.0305 + 0.9358 \times \text{Water Lev
 
 ### Task 2 – Generating Predictions
 
-The same model that achieved an **R² of 0.983** on the training set is applied to the test data. 
-Key preprocessing steps applied to the test set to avoid data leakage include:
-- `Gauging_station` is used only as an identifier and is not a predictor.
-- Missing `24HrRF_Xt_1` values are imputed with the **training median (15.65 mm)** (although rainfall is ultimately not used in the final univariate model, it ensures the dataset structure remains consistent).
-- No rows are removed from the test set, ensuring a forecast is generated for every row.
+The second part of the notebook (`River_WaterLevel_Analysis_&_Forecasting.ipynb`) covers forecasting on unseen data:
+
+1. **Load and Inspect Test Dataset** – verifying variables and distribution.
+2. **Data Preprocessing** – applying the exact same preprocessing steps to prevent data leakage:
+   - `Gauging_station` is used only as an identifier and is not a predictor.
+   - Missing `24HrRF_Xt_1` values are imputed with the **training median (15.65 mm)** (although rainfall is ultimately not used in the final univariate model, this ensures the dataset structure remains consistent).
+   - No rows are removed from the test set, ensuring a forecast is generated for every row.
+3. **Generate Predictions** – applying the Univariate OLS model to the test data.
+4. **Build Submission File** – creating sequential IDs and structuring the output to match submission requirements.
+5. **Sanity Check** – comparing test predictions vs training distributions to verify model behavior.
 
 **Output format:**
 ```
