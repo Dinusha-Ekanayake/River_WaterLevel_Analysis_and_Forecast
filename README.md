@@ -1,22 +1,42 @@
-# River Water Level Forecasting
+# 🌊 River Water Level Forecasting
 
-**Name:** Ekanayake D.B  
-**Index No:** 235514B  
-**Module:** CM2420 Statistical Inference 
+![Python](https://img.shields.io/badge/python-3.8+-blue.svg)
+![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-orange.svg)
+![Regression](https://img.shields.io/badge/Model-OLS_Regression-brightgreen.svg)
+![License](https://img.shields.io/badge/License-Academic-blueviolet.svg)
 
----
-
-## Overview
-
-This repository contains a complete regression analysis for the **River Water Level Forecasting Challenge** hosted as part of CM2420 course module. The goal is to develop a statistical model that predicts river water levels **12 hours ahead** using current water level and 24 hour rainfall observations collected from gauging stations across Sri Lanka.
-
-The dataset is derived from river monitoring data published by the Department of Irrigation, Sri Lanka, via the Disaster Management Centre (DMC), representing observations from major river basins during June 2026.
+> **Module:** CM2420 Statistical Inference  
+> **Student Name:** Ekanayake D.B  
+> **Index No:** 235514B  
 
 ---
 
-## Repository Structure
+## 📖 Table of Contents
+- [Overview](#-overview)
+- [Repository Structure](#-repository-structure)
+- [Dataset Variables](#-dataset-variables)
+- [Methodology](#-methodology)
+  - [Task 1: Model Development](#task-1-model-development)
+  - [Task 2: Generating Predictions](#task-2-generating-predictions)
+- [Key Findings & Insights](#-key-findings--insights)
+- [Strengths & Limitations](#-strengths--limitations)
+- [Getting Started](#-getting-started)
+- [Evaluation](#-evaluation)
+- [License](#-license)
 
-```
+---
+
+## 🎯 Overview
+
+This repository contains a complete regression analysis for the **River Water Level Forecasting Challenge**, hosted as part of the CM2420 course module. The core objective is to develop a statistical model capable of predicting river water levels **12 hours ahead**. 
+
+The predictions rely on the current water level and 24-hour rainfall observations collected from gauging stations across Sri Lanka. The dataset is derived from river monitoring data published by the **Department of Irrigation, Sri Lanka**, via the Disaster Management Centre (DMC), representing observations from major river basins during June 2026.
+
+---
+
+## 📂 Repository Structure
+
+```text
 River_WaterLevel_Preliminary_Analysis/
 │
 ├── River_WaterLevel_Analysis_&_Forecasting.ipynb   ← Full analysis notebook (Task 1 & 2)
@@ -32,60 +52,63 @@ River_WaterLevel_Preliminary_Analysis/
 
 ---
 
-## Dataset Variables
+## 📊 Dataset Variables
 
 | Variable | Description | Role |
-|---|---|---|
+|:---|:---|:---|
 | `Gauging_station` | Gauging station identifier | Identifier only (not a predictor) |
-| `Water_Level_Xt_1` | River water level (mm) at time *t* | Predictor X₁ |
-| `24HrRF_Xt_1` | Total rainfall (mm) in previous 24 hours at time *t* | Predictor X₂ |
+| `Water_Level_Xt_1` | River water level (mm) at time *t* | **Predictor X₁** |
+| `24HrRF_Xt_1` | Total rainfall (mm) in previous 24 hours at time *t* | **Predictor X₂** |
 | `Water_Level_Xt` | River water level (mm) at time *t* + 12 hours | **Target Y** |
 
-**Training set:** 78 rows, 8 rows excluded (listwise deletion) → **70 usable training observations**
+> **Note on Training set:** Initially 78 rows. Listwise deletion was applied to handle missing values (6 missing targets + 2 missing rainfall = 8 rows removed) resulting in **70 usable training observations**.
 
 ---
 
-## Methodology
+## 🔬 Methodology
 
-### Task 1 – Model Development
+### Task 1: Model Development
 
-The full analysis notebook (`River_WaterLevel_Analysis_&_Forecasting.ipynb`) covers:
+The first part of the notebook (`River_WaterLevel_Analysis_&_Forecasting.ipynb`) covers the rigorous development of the statistical model:
 
-1. **Exploratory Data Analysis** – distributions, missing values, outlier inspection, correlation analysis
-2. **Data Preprocessing** – listwise deletion of all rows with any missing value (6 missing target + 2 missing rainfall = 8 rows removed)
-3. **Univariate OLS Regression** – current water level as the sole predictor
-4. **Multivariate OLS Regression** – current water level + 24-hour rainfall
-5. **Model Diagnostics** – residuals vs fitted, Q-Q plot, Shapiro-Wilk test, Durbin-Watson, VIF
-6. **Model Evaluation** – R², MSE, RMSE, MAE on training data
-7. **Model Selection** – univariate model preferred on parsimony (AIC, BIC, adjusted R²)
+1. **Exploratory Data Analysis (EDA)**: Analyzed distributions, missing values, outlier inspection, and correlation analysis.
+2. **Data Preprocessing**: Executed listwise deletion to ensure a complete and reliable dataset.
+3. **Univariate OLS Regression**: Modeled the target using the current water level as the sole predictor.
+4. **Multivariate OLS Regression**: Modeled the target incorporating both current water level and 24-hour rainfall.
+5. **Model Diagnostics**: Validated assumptions via residuals vs. fitted plots, Q-Q plots, Shapiro-Wilk tests, Durbin-Watson, and VIF scoring.
+6. **Model Evaluation**: Assessed performance using R², MSE, RMSE, and MAE on training data.
+7. **Model Selection**: The univariate model was selected based on parsimony (AIC, BIC, adjusted R²).
 
-### Final Model
+#### Final Model Equation
 
 $$\widehat{\text{Water Level}_{t+12h}} = -0.0305 + 0.9358 \times \text{Water Level}_{t}$$
 
+#### Performance Metrics
 | Metric | Value |
-|---|---|
+|:---|:---|
 | R-squared | 0.9834 |
 | Adjusted R² | 0.9831 |
 | RMSE | 0.3082 mm |
 | MAE | 0.2074 mm |
 | MSE | 0.0950 mm² |
 
-### Task 2 – Generating Predictions
+---
 
-The second part of the notebook (`River_WaterLevel_Analysis_&_Forecasting.ipynb`) covers forecasting on unseen data:
+### Task 2: Generating Predictions
 
-1. **Load and Inspect Test Dataset** – verifying variables and distribution.
-2. **Data Preprocessing** – applying the exact same preprocessing steps to prevent data leakage:
-   - `Gauging_station` is used only as an identifier and is not a predictor.
-   - Missing `24HrRF_Xt_1` values are imputed with the **training median (15.65 mm)** (although rainfall is ultimately not used in the final univariate model, this ensures the dataset structure remains consistent).
-   - No rows are removed from the test set, ensuring a forecast is generated for every row.
-3. **Generate Predictions** – applying the Univariate OLS model to the test data.
-4. **Build Submission File** – creating sequential IDs and structuring the output to match submission requirements.
-5. **Sanity Check** – comparing test predictions vs training distributions to verify model behavior.
+The second part of the notebook generates forecasts on unseen data:
+
+1. **Load and Inspect Test Dataset**: Verified variables and distribution.
+2. **Data Preprocessing**: Applied the exact same preprocessing steps to prevent data leakage:
+   - `Gauging_station` is retained as an identifier.
+   - Missing `24HrRF_Xt_1` values are imputed with the **training median (15.65 mm)** to ensure the dataset structure remains consistent, even though rainfall is not used in the final univariate model.
+   - Zero rows are removed, guaranteeing a forecast for every input row.
+3. **Generate Predictions**: Applied the Univariate OLS model to the test data.
+4. **Build Submission File**: Created sequential IDs and structured the output to match submission guidelines.
+5. **Sanity Check**: Compared test predictions against training distributions to verify model behavior.
 
 **Output format:**
-```
+```csv
 ID,Water_Level_Xt
 1,1.234
 2,0.876
@@ -94,43 +117,45 @@ ID,Water_Level_Xt
 
 ---
 
-## Key Findings & Insights
+## 💡 Key Findings & Insights
 
-- **High Predictiveness**: The **current water level alone explains 98.3% of the variance** in the level 12 hours ahead (correlation ≈ 0.99). This reflects the physical persistence of river flow over short time horizons.
-- **Rainfall Insignificance**: **24-hour rainfall is not a statistically significant predictor** (p = 0.187) once the current water level is included. Its effect is likely already embedded in the current water level.
-- **No Multicollinearity**: **VIF ≈ 1.13** confirms there is no concerning multicollinearity between the predictors.
+- **High Predictiveness**: The **current water level alone explains 98.3% of the variance** in the level 12 hours ahead (correlation ≈ 0.99). This reflects the profound physical persistence of river flow over short time horizons.
+- **Rainfall Insignificance**: **24-hour rainfall is not a statistically significant predictor** (p = 0.187) once the current water level is included. Its immediate effect is likely already embedded in the current water level.
+- **No Multicollinearity**: A **VIF ≈ 1.13** confirms there is no concerning multicollinearity between the initial predictors.
 
-## Practical Usefulness
+### 🏭 Practical Usefulness
 
-In the context of flood early warning and river management, this model provides:
-- **Early Warning Lead Time**: A reliable 12-hour forecast gives authorities sufficient time to issue warnings and evacuate low-lying areas.
-- **Simplicity & Robustness**: The model relies on a single telemetered input (current water level), reducing dependency on potentially uncertain rainfall forecasts.
-- **Interpretability**: The physical interpretation is clear—the river level 12 hours later is roughly 0.94 times the current level minus a small constant.
-
-## Strengths and Limitations
-
-### Strengths
-- **Low Input Data Requirement**: Only the current water level is required at forecast time.
-- **Avoids Overfitting**: A single-predictor linear model has no tuning parameters, significantly reducing the risk of overfitting (high variance) compared to complex machine learning models on a small dataset.
-
-### Limitations
-- **Heteroscedasticity**: Residual spread increases at higher water levels; the model is slightly less precise for large river stations.
-- **Small Cross-Sectional Sample**: With only 70 training observations, the model relies on a cross-sectional snapshot rather than capturing true temporal dynamics (e.g., seasonality or long-term trends).
-- **Linear Assumption**: Assumes a linear relationship. During extreme flood events (bank overflow, backwater effects), river dynamics become non-linear.
+In the context of flood early warning and river management, this model provides immense real-world value:
+- **Early Warning Lead Time**: A highly reliable 12-hour forecast gives authorities sufficient time to issue warnings, deploy resources, and evacuate low-lying areas.
+- **Simplicity & Robustness**: Relying on a single telemetered input (current water level) reduces dependency on potentially uncertain rainfall forecasts and prevents system failures.
+- **Interpretability**: The physical interpretation is exceptionally clear—the river level 12 hours later is simply ~0.94 times the current level.
 
 ---
 
-## How to Run
+## ⚖️ Strengths & Limitations
 
-### Requirements
+### ✅ Strengths
+- **Low Input Data Requirement**: Only the current water level is required at forecast time.
+- **Avoids Overfitting**: A single-predictor linear model has no tuning parameters, significantly mitigating the risk of overfitting (high variance) commonly seen when deploying complex machine learning models on a limited dataset.
 
-You can install all dependencies using the provided `requirements.txt` file:
+### ⚠️ Limitations
+- **Heteroscedasticity**: Residual spread increases at higher water levels; therefore, the model is slightly less precise for massive river stations during peak flow.
+- **Small Cross-Sectional Sample**: With only 70 training observations, the model relies on a cross-sectional snapshot rather than capturing true temporal dynamics (e.g., seasonality or long-term trends).
+- **Linear Assumption**: The model fundamentally assumes a linear relationship. During extreme flood events involving bank overflow or backwater effects, river dynamics become highly non-linear.
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+You can install all required dependencies using the provided `requirements.txt` file:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-Or activate the project virtual environment:
+Alternatively, if you are using a virtual environment:
 ```bash
 # PowerShell
 .\.venv\Scripts\Activate.ps1
@@ -139,30 +164,30 @@ Or activate the project virtual environment:
 .venv\Scripts\activate
 ```
 
-### Run the notebook
+### Run the Notebook
 
-Open `River_WaterLevel_Analysis_&_Forecasting.ipynb` in Jupyter and run:
-- **Kernel → Restart & Run All** to execute everything cleanly from scratch.
+1. Open `River_WaterLevel_Analysis_&_Forecasting.ipynb` in Jupyter Notebook/Lab.
+2. Navigate to **Kernel → Restart & Run All** to execute everything seamlessly from scratch.
 
-### Generate the submission (Task 2)
+### Generate the Submission (Task 2)
 
-1. Place `test_data.csv` in this directory.
-2. Run the **Task 2** cells in the notebook.
-3. Upload the generated `submission.csv` to the leaderboard.
+1. Ensure `test_data.csv` is located in the root directory.
+2. Run the **Task 2** cells sequentially in the notebook.
+3. The pipeline will output `submission.csv`, ready for upload.
 
 ---
 
-## Evaluation Metric
+## 🏅 Evaluation
 
-Scored on **Mean Squared Error (MSE)**:
+Submissions are scored on **Mean Squared Error (MSE)**:
 
 $$\text{MSE} = \frac{1}{n}\sum_{i=1}^{n}(\hat{y}_i - y_i)^2$$
 
-Lower MSE = better performance.  
-Training MSE of the final model: **0.0950 mm²**
+A lower MSE indicates superior predictive performance.  
+🏆 **Training MSE of the final model: 0.0950 mm²**
 
 ---
 
-## License
+## 📜 License & Acknowledgments
 
-This work is submitted as part of a university course assignment. The dataset is derived from publicly available data published by the Department of Irrigation, Sri Lanka.
+This work is submitted as part of a university course assignment for **CM2420 Statistical Inference**. The dataset is derived from publicly available data published by the **Department of Irrigation, Sri Lanka**.
