@@ -19,12 +19,15 @@ The dataset is derived from river monitoring data published by the Department of
 ```
 River_WaterLevel_Preliminary_Analysis/
 │
-├── River_WaterLevel_Analysis.ipynb        ← Full analysis notebook (Task 1 & 2)
-├── requirements.txt
+├── River_WaterLevel_Analysis_&_Forecasting.ipynb   ← Full analysis notebook (Task 1 & 2)
+├── River_WaterLevel_Analysis_&_Forecasting.html    ← Exported HTML of the notebook
+├── requirements.txt           ← Python dependencies
 ├── training_data.csv          ← Training dataset (78 gauging stations)
-├── README.md
+├── test_data.csv              ← Test dataset for Task 2 predictions
+├── submission.csv             ← Generated forecast submission
+├── README.md                  ← Project documentation
 |
-└── .gitignore
+└── .gitignore                 ← Git ignore file
 ```
 
 ---
@@ -46,7 +49,7 @@ River_WaterLevel_Preliminary_Analysis/
 
 ### Task 1 – Model Development
 
-The full analysis notebook (`River_WaterLevel_Task1_Analysis.ipynb`) covers:
+The full analysis notebook (`River_WaterLevel_Analysis_&_Forecasting.ipynb`) covers:
 
 1. **Exploratory Data Analysis** – distributions, missing values, outlier inspection, correlation analysis
 2. **Data Preprocessing** – listwise deletion of all rows with any missing value (6 missing target + 2 missing rainfall = 8 rows removed)
@@ -70,7 +73,13 @@ $$\widehat{\text{Water Level}_{t+12h}} = -0.0305 + 0.9358 \times \text{Water Lev
 
 ### Task 2 – Generating Predictions
 
-**format:**
+The same model that achieved an **R² of 0.983** on the training set is applied to the test data. 
+Key preprocessing steps applied to the test set to avoid data leakage include:
+- `Gauging_station` is used only as an identifier and is not a predictor.
+- Missing `24HrRF_Xt_1` values are imputed with the **training median (15.65 mm)** (although rainfall is ultimately not used in the final univariate model, it ensures the dataset structure remains consistent).
+- No rows are removed from the test set, ensuring a forecast is generated for every row.
+
+**Output format:**
 ```
 ID,Water_Level_Xt
 1,1.234
@@ -80,12 +89,29 @@ ID,Water_Level_Xt
 
 ---
 
-## Key Findings
+## Key Findings & Insights
 
-- The **current water level explains 98% of the variance** in the level 12 hours ahead (correlation ≈ 0.99). This reflects the physical persistence of river flow over short time horizons.
-- **24-hour rainfall is not a statistically significant predictor** (p = 0.187) once the current level is included. Its effect is already embedded in the current water level.
-- **VIF ≈ 1.13** confirms no multicollinearity between the two predictors.
-- The residuals exhibit **mild heteroscedasticity** and **non-normality**, consistent with the right-skewed nature of hydrological data. These are acknowledged limitations.
+- **High Predictiveness**: The **current water level alone explains 98.3% of the variance** in the level 12 hours ahead (correlation ≈ 0.99). This reflects the physical persistence of river flow over short time horizons.
+- **Rainfall Insignificance**: **24-hour rainfall is not a statistically significant predictor** (p = 0.187) once the current water level is included. Its effect is likely already embedded in the current water level.
+- **No Multicollinearity**: **VIF ≈ 1.13** confirms there is no concerning multicollinearity between the predictors.
+
+## Practical Usefulness
+
+In the context of flood early warning and river management, this model provides:
+- **Early Warning Lead Time**: A reliable 12-hour forecast gives authorities sufficient time to issue warnings and evacuate low-lying areas.
+- **Simplicity & Robustness**: The model relies on a single telemetered input (current water level), reducing dependency on potentially uncertain rainfall forecasts.
+- **Interpretability**: The physical interpretation is clear—the river level 12 hours later is roughly 0.94 times the current level minus a small constant.
+
+## Strengths and Limitations
+
+### Strengths
+- **Low Input Data Requirement**: Only the current water level is required at forecast time.
+- **Avoids Overfitting**: A single-predictor linear model has no tuning parameters, significantly reducing the risk of overfitting (high variance) compared to complex machine learning models on a small dataset.
+
+### Limitations
+- **Heteroscedasticity**: Residual spread increases at higher water levels; the model is slightly less precise for large river stations.
+- **Small Cross-Sectional Sample**: With only 70 training observations, the model relies on a cross-sectional snapshot rather than capturing true temporal dynamics (e.g., seasonality or long-term trends).
+- **Linear Assumption**: Assumes a linear relationship. During extreme flood events (bank overflow, backwater effects), river dynamics become non-linear.
 
 ---
 
@@ -110,7 +136,7 @@ Or activate the project virtual environment:
 
 ### Run the notebook
 
-Open `River_WaterLevel_Analysis.ipynb` in Jupyter and run:
+Open `River_WaterLevel_Analysis_&_Forecasting.ipynb` in Jupyter and run:
 - **Kernel → Restart & Run All** to execute everything cleanly from scratch.
 
 ### Generate the submission (Task 2)
